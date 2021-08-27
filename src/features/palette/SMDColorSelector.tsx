@@ -1,0 +1,166 @@
+import React, { useRef, useState } from "react";
+import { Row, Col, Form } from "react-bootstrap";
+import {
+  BRIGHTNESS_HIGHLIGHT,
+  BRIGHTNESS_NORMAL,
+  BRIGHTNESS_SHADOW,
+  convertSMDTo24Bit,
+  getBits,
+  getColorFromBits,
+  isValid,
+} from "./smdColors";
+import styles from "./SMDColorSelector.module.scss";
+
+export enum BrightnessMode {
+  NORMAL = 0,
+  SHADOW = 1,
+  HIGHLIGHT = 2,
+}
+
+interface SMDColorSelectorProps {
+  initialColor?: number;
+  initialBrightnessMode?: BrightnessMode;
+}
+
+function selectMode(mode: BrightnessMode): number[] {
+  if (mode === BrightnessMode.SHADOW) {
+    return BRIGHTNESS_SHADOW;
+  } else if (mode === BrightnessMode.HIGHLIGHT) {
+    return BRIGHTNESS_HIGHLIGHT;
+  } else {
+    return BRIGHTNESS_NORMAL;
+  }
+}
+
+function formatBitHex(n: number) {
+  return "0x" + (n * 2).toString(16);
+}
+
+export function SMDColorSelector({
+  initialColor = 0x0,
+  initialBrightnessMode = BrightnessMode.NORMAL,
+}: SMDColorSelectorProps) {
+  const [color, setColor] = useState(initialColor);
+  const [colorInput, setColorInput] = useState(
+    "0x" + initialColor.toString(16)
+  );
+  const [mode, setMode] = useState(initialBrightnessMode);
+  const { r, g, b } = getBits(color);
+  const rSlider = useRef<any>(null);
+  const gSlider = useRef<any>(null);
+  const bSlider = useRef<any>(null);
+  const b24Color = convertSMDTo24Bit(color, selectMode(mode));
+  let webColor = b24Color.toString(16);
+  webColor = "#" + "0".repeat(Math.max(0, 6 - webColor.length)) + webColor;
+  const rgbChange = () => {
+    setColor(
+      getColorFromBits({
+        r: rSlider.current?.value || 0,
+        g: gSlider.current?.value || 0,
+        b: bSlider.current?.value || 0,
+      })
+    );
+    setColorInput("0x" + color.toString(16));
+  };
+  const colorInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setColorInput(ev.currentTarget.value);
+    let n = parseInt(ev.currentTarget.value);
+    if (isValid(n)) {
+      setColor(n);
+    }
+  };
+  return (
+    <div>
+      <Row>
+        <Col xs="auto">
+          <div className="border rounded border-2 p-1 h-100">
+            <div
+              className="h-100"
+              style={{
+                backgroundColor: webColor,
+                minWidth: "15vw"
+              }}
+            >
+              &nbsp;
+            </div>
+          </div>
+        </Col>
+        <Col>
+          <Form.Group as={Row}>
+            <Col xs="auto">
+              <Form.Control
+                className={styles.ColorInput}
+                value={colorInput}
+                onChange={colorInputChange}
+              />
+            </Col>
+            <Form.Label column xs="auto">
+              Brightness Mode:
+            </Form.Label>
+            <Col>
+              <Form.Select
+                defaultValue={mode}
+                onChange={(ev) => setMode(parseInt(ev.currentTarget.value))}
+              >
+                <option value={BrightnessMode.NORMAL}>Normal</option>
+                <option value={BrightnessMode.SHADOW}>Shadow</option>
+                <option value={BrightnessMode.HIGHLIGHT}>Highlight</option>
+              </Form.Select>
+            </Col>
+            <Form.Label column xs="auto">
+              Web: {webColor}
+            </Form.Label>
+          </Form.Group>
+
+          <div className={styles.Sliders}>
+            <Row className={styles.R}>
+              <Col>
+                <Form.Range
+                  ref={rSlider}
+                  min={0}
+                  max={7}
+                  step={1}
+                  value={r}
+                  onChange={rgbChange}
+                />
+              </Col>
+              <Col className={styles.Value} xs="auto">
+                {formatBitHex(r)}
+              </Col>
+            </Row>
+            <Row className={styles.G}>
+              <Col>
+                <Form.Range
+                  ref={gSlider}
+                  min={0}
+                  max={7}
+                  step={1}
+                  value={g}
+                  onChange={rgbChange}
+                />
+              </Col>
+              <Col className={styles.Value} xs="auto">
+                {formatBitHex(g)}
+              </Col>
+            </Row>
+            <Row className={styles.B}>
+              <Col>
+                <Form.Range
+                  ref={bSlider}
+                  min={0}
+                  max={7}
+                  step={1}
+                  value={b}
+                  onChange={rgbChange}
+                />
+              </Col>
+              <Col className={styles.Value} xs="auto">
+                {formatBitHex(b)}
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+}
