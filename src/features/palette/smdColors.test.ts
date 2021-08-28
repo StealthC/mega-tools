@@ -31,3 +31,8 @@ it('Converts to smdt (default brightness)', () => {
   expect(smdColors.convert24BitToSMD(0xffffff)).toBe(0xeee);
   expect(smdColors.convert24BitToSMD(0x747474)).toBe(0x666);
 });
+
+it('Calculate Gradient position', () => {
+  expect(smdColors.GradientPosition(0x0, 0xeee, 0.0)).toBe(0x0);
+  expect(smdColors.GradientPosition(0x0, 0xeee, 1.0)).toBe(0xeee);
+});

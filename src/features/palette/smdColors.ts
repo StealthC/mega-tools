@@ -45,6 +45,10 @@ export function ConvertByteToIndex(byte: number, byteTable: number[]): number {
   return byteTable.length - 1;
 }
 
+function lerp(start: number, end: number, pos: number) {
+  return (1 - pos) * start + pos * end;
+}
+
 export function convert24BitToSMD(
   B32Color: number,
   brightness = BRIGHTNESS_NORMAL,
@@ -64,4 +68,25 @@ export function convertSMDTo24Bit(
   bits.g = brightness[bits.g];
   bits.b = brightness[bits.b];
   return (bits.r << 16) | (bits.g << 8) | bits.b;
+}
+
+export function GradientPosition(
+  from: number,
+  to: number,
+  position: number,
+): number {
+  const fromBits = getBits(from);
+  const toBits = getBits(to);
+  const resultBits = {
+    r: Math.round(lerp(fromBits.r, toBits.r, position)),
+    g: Math.round(lerp(fromBits.g, toBits.g, position)),
+    b: Math.round(lerp(fromBits.b, toBits.b, position)),
+  };
+
+  return getColorFromBits(resultBits);
+}
+
+export function Convert24BitsToWeb(color: number) {
+  const colorString = color.toString(16);
+  return `#${'0'.repeat(Math.max(0, 6 - colorString.length))}${colorString}`;
 }

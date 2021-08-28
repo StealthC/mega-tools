@@ -4,6 +4,7 @@ import {
   BRIGHTNESS_HIGHLIGHT,
   BRIGHTNESS_NORMAL,
   BRIGHTNESS_SHADOW,
+  Convert24BitsToWeb,
   convert24BitToSMD,
   convertSMDTo24Bit,
   getBits,
@@ -53,19 +54,17 @@ export function SMDColorSelector({
   const gSlider = useRef<HTMLInputElement>(null);
   const bSlider = useRef<HTMLInputElement>(null);
   const b24Color = convertSMDTo24Bit(color, selectMode(mode));
-  let webColor = b24Color.toString(16);
-  webColor = `#${'0'.repeat(Math.max(0, 6 - webColor.length))}${webColor}`;
+  const webColor = Convert24BitsToWeb(b24Color);
   const rgbChange = () => {
-    setColor(
-      getColorFromBits({
-        r: parseInt(rSlider.current?.value || '0'),
-        g: parseInt(gSlider.current?.value || '0'),
-        b: parseInt(bSlider.current?.value || '0'),
-      }),
-    );
-    setColorInput(`0x${color.toString(16)}`);
+    const newColor = getColorFromBits({
+      r: rSlider.current?.valueAsNumber || 0,
+      g: gSlider.current?.valueAsNumber || 0,
+      b: bSlider.current?.valueAsNumber || 0,
+    });
+    setColorInput(`0x${newColor.toString(16)}`);
+    setColor(newColor);
     if (onChangeColor) {
-      onChangeColor(color);
+      onChangeColor(newColor);
     }
   };
   const webColorChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +81,7 @@ export function SMDColorSelector({
     if (isValid(n)) {
       setColor(n);
       if (onChangeColor) {
-        onChangeColor(color);
+        onChangeColor(n);
       }
     }
   };
@@ -103,11 +102,11 @@ export function SMDColorSelector({
           </div>
         </Col>
         <Col>
-          <Form.Group as={Row} xs={2} md="auto">
-            <Form.Label column xs={6} md="auto">
+          <Form.Group as={Row} xs={2} lg={6}>
+            <Form.Label column sm={6} md={3} lg="auto">
               Brightness Mode:
             </Form.Label>
-            <Col xs={6}>
+            <Col xs={6} md={3}>
               <Form.Select
                 defaultValue={mode}
                 onChange={(ev) => setMode(parseInt(ev.currentTarget.value))}
@@ -118,14 +117,14 @@ export function SMDColorSelector({
               </Form.Select>
             </Col>
 
-            <Form.Label column xs={6} md="auto">
+            <Form.Label column xs={6} md={3} lg="auto">
               SMD:
             </Form.Label>
-            <Col xs={6}>
+            <Col xs={6} md={3}>
               <Form.Control value={colorInput} onChange={colorInputChange} />
             </Col>
 
-            <Form.Label column xs={4} md="auto">
+            <Form.Label column xs={4} lg="auto">
               Web:{' '}
             </Form.Label>
             <Col xs={4}>
@@ -135,7 +134,7 @@ export function SMDColorSelector({
                 onChange={webColorChange}
               />
             </Col>
-            <Form.Label column xs={4} md="auto">
+            <Form.Label column xs={4} lg="auto">
               {webColor}
             </Form.Label>
           </Form.Group>
