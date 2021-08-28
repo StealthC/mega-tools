@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Row, Col, Form } from "react-bootstrap";
+import React, { useRef, useState } from 'react';
+import { Row, Col, Form } from 'react-bootstrap';
 import {
   BRIGHTNESS_HIGHLIGHT,
   BRIGHTNESS_NORMAL,
@@ -8,8 +8,8 @@ import {
   getBits,
   getColorFromBits,
   isValid,
-} from "./smdColors";
-import styles from "./SMDColorSelector.module.scss";
+} from './smdColors';
+import styles from './SMDColorSelector.module.scss';
 
 export enum BrightnessMode {
   NORMAL = 0,
@@ -17,56 +17,64 @@ export enum BrightnessMode {
   HIGHLIGHT = 2,
 }
 
-interface SMDColorSelectorProps {
+export interface SMDColorSelectorProps {
   initialColor?: number;
   initialBrightnessMode?: BrightnessMode;
+  onChangeColor?: (color: number) => void;
 }
 
 function selectMode(mode: BrightnessMode): number[] {
   if (mode === BrightnessMode.SHADOW) {
     return BRIGHTNESS_SHADOW;
-  } else if (mode === BrightnessMode.HIGHLIGHT) {
-    return BRIGHTNESS_HIGHLIGHT;
-  } else {
-    return BRIGHTNESS_NORMAL;
   }
+  if (mode === BrightnessMode.HIGHLIGHT) {
+    return BRIGHTNESS_HIGHLIGHT;
+  }
+  return BRIGHTNESS_NORMAL;
 }
 
 function formatBitHex(n: number) {
-  return "0x" + (n * 2).toString(16);
+  return `0x${(n * 2).toString(16)}`;
 }
 
 export function SMDColorSelector({
   initialColor = 0x0,
   initialBrightnessMode = BrightnessMode.NORMAL,
-}: SMDColorSelectorProps) {
+  onChangeColor,
+}: SMDColorSelectorProps): JSX.Element {
   const [color, setColor] = useState(initialColor);
   const [colorInput, setColorInput] = useState(
-    "0x" + initialColor.toString(16)
+    `0x${initialColor.toString(16)}`,
   );
   const [mode, setMode] = useState(initialBrightnessMode);
   const { r, g, b } = getBits(color);
-  const rSlider = useRef<any>(null);
-  const gSlider = useRef<any>(null);
-  const bSlider = useRef<any>(null);
+  const rSlider = useRef<HTMLInputElement>(null);
+  const gSlider = useRef<HTMLInputElement>(null);
+  const bSlider = useRef<HTMLInputElement>(null);
   const b24Color = convertSMDTo24Bit(color, selectMode(mode));
   let webColor = b24Color.toString(16);
-  webColor = "#" + "0".repeat(Math.max(0, 6 - webColor.length)) + webColor;
+  webColor = `#${'0'.repeat(Math.max(0, 6 - webColor.length))}${webColor}`;
   const rgbChange = () => {
     setColor(
       getColorFromBits({
-        r: rSlider.current?.value || 0,
-        g: gSlider.current?.value || 0,
-        b: bSlider.current?.value || 0,
-      })
+        r: parseInt(rSlider.current?.value || '0'),
+        g: parseInt(gSlider.current?.value || '0'),
+        b: parseInt(bSlider.current?.value || '0'),
+      }),
     );
-    setColorInput("0x" + color.toString(16));
+    setColorInput(`0x${color.toString(16)}`);
+    if (onChangeColor) {
+      onChangeColor(color);
+    }
   };
   const colorInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setColorInput(ev.currentTarget.value);
-    let n = parseInt(ev.currentTarget.value);
+    const n = parseInt(ev.currentTarget.value);
     if (isValid(n)) {
       setColor(n);
+      if (onChangeColor) {
+        onChangeColor(color);
+      }
     }
   };
   return (
@@ -78,7 +86,7 @@ export function SMDColorSelector({
               className="h-100"
               style={{
                 backgroundColor: webColor,
-                minWidth: "15vw"
+                minWidth: '15vw',
               }}
             >
               &nbsp;

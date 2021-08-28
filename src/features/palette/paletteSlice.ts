@@ -8,7 +8,6 @@ const initialState: PaletteState = {
   color: 0,
 };
 
-
 export const paletteSlice = createSlice({
   name: 'palette',
   initialState,
@@ -16,7 +15,7 @@ export const paletteSlice = createSlice({
   reducers: {
     setColor: (state, action: PayloadAction<number>) => {
       state.color = action.payload;
-    }
+    },
   },
 });
 

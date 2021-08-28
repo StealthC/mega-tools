@@ -1,9 +1,7 @@
 import React from 'react';
-import { useAppDispatch } from './app/hooks';
 import { SMDColorSelector } from './features/palette/SMDColorSelector';
 
-export function ColorsPage(): JSX.Element {
-  const dispatch = useAppDispatch();
+export function GradientsPage(): JSX.Element {
   return (
     <div>
       <SMDColorSelector />
