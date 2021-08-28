@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { Container, Nav } from 'react-bootstrap';
 import { ColorsPage } from './ColorsPage';
+import { GradientsPage } from './GradientsPage';
 
 function App(): JSX.Element {
   return (
@@ -44,6 +45,9 @@ function App(): JSX.Element {
           <Switch>
             <Route path="/colors">
               <ColorsPage />
+            </Route>
+            <Route path="/gradient">
+              <GradientsPage />
             </Route>
             <Route path="/">
               <Redirect to="/colors" />

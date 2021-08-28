@@ -4,6 +4,7 @@ import {
   BRIGHTNESS_HIGHLIGHT,
   BRIGHTNESS_NORMAL,
   BRIGHTNESS_SHADOW,
+  convert24BitToSMD,
   convertSMDTo24Bit,
   getBits,
   getColorFromBits,
@@ -67,6 +68,14 @@ export function SMDColorSelector({
       onChangeColor(color);
     }
   };
+  const webColorChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setColor(
+      convert24BitToSMD(
+        parseInt(ev.currentTarget.value.substr(1), 16),
+        selectMode(mode),
+      ),
+    );
+  };
   const colorInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setColorInput(ev.currentTarget.value);
     const n = parseInt(ev.currentTarget.value);
@@ -94,18 +103,11 @@ export function SMDColorSelector({
           </div>
         </Col>
         <Col>
-          <Form.Group as={Row}>
-            <Col xs="auto">
-              <Form.Control
-                className={styles.ColorInput}
-                value={colorInput}
-                onChange={colorInputChange}
-              />
-            </Col>
-            <Form.Label column xs="auto">
+          <Form.Group as={Row} xs={2} md="auto">
+            <Form.Label column xs={6} md="auto">
               Brightness Mode:
             </Form.Label>
-            <Col>
+            <Col xs={6}>
               <Form.Select
                 defaultValue={mode}
                 onChange={(ev) => setMode(parseInt(ev.currentTarget.value))}
@@ -115,8 +117,26 @@ export function SMDColorSelector({
                 <option value={BrightnessMode.HIGHLIGHT}>Highlight</option>
               </Form.Select>
             </Col>
-            <Form.Label column xs="auto">
-              Web: {webColor}
+
+            <Form.Label column xs={6} md="auto">
+              SMD:
+            </Form.Label>
+            <Col xs={6}>
+              <Form.Control value={colorInput} onChange={colorInputChange} />
+            </Col>
+
+            <Form.Label column xs={4} md="auto">
+              Web:{' '}
+            </Form.Label>
+            <Col xs={4}>
+              <Form.Control
+                type="color"
+                value={webColor}
+                onChange={webColorChange}
+              />
+            </Col>
+            <Form.Label column xs={4} md="auto">
+              {webColor}
             </Form.Label>
           </Form.Group>
 
