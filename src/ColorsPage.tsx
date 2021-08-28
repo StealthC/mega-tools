@@ -5,13 +5,17 @@ import { SMDColorSelector } from './features/palette/SMDColorSelector';
 
 export function ColorsPage(): JSX.Element {
   const dispatch = useAppDispatch();
-  const color = useAppSelector(getColor);
+  const { color, colorMode } = useAppSelector(getColor);
   const onChangeColor = (ncolor: number) => {
     dispatch(setColor(ncolor));
   };
   return (
     <div>
-      <SMDColorSelector initialColor={color} onChangeColor={onChangeColor} />
+      <SMDColorSelector
+        initialColor={color}
+        initialBrightnessMode={colorMode}
+        onChangeColor={onChangeColor}
+      />
     </div>
   );
 }

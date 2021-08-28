@@ -1,38 +1,22 @@
 import React, { useRef, useState } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import {
-  BRIGHTNESS_HIGHLIGHT,
-  BRIGHTNESS_NORMAL,
-  BRIGHTNESS_SHADOW,
-  Convert24BitsToWeb,
+  BrightnessMode,
+  convert24BitsToWeb,
   convert24BitToSMD,
   convertSMDTo24Bit,
   getBits,
   getColorFromBits,
   isValid,
+  selectMode,
 } from './smdColors';
 import styles from './SMDColorSelector.module.scss';
 
-export enum BrightnessMode {
-  NORMAL = 0,
-  SHADOW = 1,
-  HIGHLIGHT = 2,
-}
-
 export interface SMDColorSelectorProps {
   initialColor?: number;
-  initialBrightnessMode?: BrightnessMode;
+  initialBrightnessMode?: number;
+  disableMode?: boolean;
   onChangeColor?: (color: number) => void;
-}
-
-function selectMode(mode: BrightnessMode): number[] {
-  if (mode === BrightnessMode.SHADOW) {
-    return BRIGHTNESS_SHADOW;
-  }
-  if (mode === BrightnessMode.HIGHLIGHT) {
-    return BRIGHTNESS_HIGHLIGHT;
-  }
-  return BRIGHTNESS_NORMAL;
 }
 
 function formatBitHex(n: number) {
@@ -41,7 +25,8 @@ function formatBitHex(n: number) {
 
 export function SMDColorSelector({
   initialColor = 0x0,
-  initialBrightnessMode = BrightnessMode.NORMAL,
+  initialBrightnessMode = BrightnessMode.normal,
+  disableMode,
   onChangeColor,
 }: SMDColorSelectorProps): JSX.Element {
   const [color, setColor] = useState(initialColor);
@@ -54,7 +39,7 @@ export function SMDColorSelector({
   const gSlider = useRef<HTMLInputElement>(null);
   const bSlider = useRef<HTMLInputElement>(null);
   const b24Color = convertSMDTo24Bit(color, selectMode(mode));
-  const webColor = Convert24BitsToWeb(b24Color);
+  const webColor = convert24BitsToWeb(b24Color);
   const rgbChange = () => {
     const newColor = getColorFromBits({
       r: rSlider.current?.valueAsNumber || 0,
@@ -68,12 +53,14 @@ export function SMDColorSelector({
     }
   };
   const webColorChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setColor(
-      convert24BitToSMD(
-        parseInt(ev.currentTarget.value.substr(1), 16),
-        selectMode(mode),
-      ),
+    const n = convert24BitToSMD(
+      parseInt(ev.currentTarget.value.substr(1), 16),
+      selectMode(mode),
     );
+    setColor(n);
+    if (onChangeColor) {
+      onChangeColor(n);
+    }
   };
   const colorInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setColorInput(ev.currentTarget.value);
@@ -88,13 +75,13 @@ export function SMDColorSelector({
   return (
     <div>
       <Row>
-        <Col xs="auto">
+        <Col xs={2}>
           <div className="border rounded border-2 p-1 h-100">
             <div
               className="h-100"
               style={{
                 backgroundColor: webColor,
-                minWidth: '15vw',
+                width: '100%',
               }}
             >
               &nbsp;
@@ -103,29 +90,33 @@ export function SMDColorSelector({
         </Col>
         <Col>
           <Form.Group as={Row} xs={2} lg={6}>
-            <Form.Label column sm={6} md={3} lg="auto">
-              Brightness Mode:
-            </Form.Label>
-            <Col xs={6} md={3}>
-              <Form.Select
-                defaultValue={mode}
-                onChange={(ev) => setMode(parseInt(ev.currentTarget.value))}
-              >
-                <option value={BrightnessMode.NORMAL}>Normal</option>
-                <option value={BrightnessMode.SHADOW}>Shadow</option>
-                <option value={BrightnessMode.HIGHLIGHT}>Highlight</option>
-              </Form.Select>
-            </Col>
+            {disableMode ? null : (
+              <>
+                <Form.Label column sm={6} md={3} lg="auto">
+                  Mode:
+                </Form.Label>
+                <Col xs={6} md={3}>
+                  <Form.Select
+                    defaultValue={mode}
+                    onChange={(ev) => setMode(parseInt(ev.currentTarget.value))}
+                  >
+                    <option value={BrightnessMode.normal}>Normal</option>
+                    <option value={BrightnessMode.shadow}>Shadow</option>
+                    <option value={BrightnessMode.highlight}>Highlight</option>
+                  </Form.Select>
+                </Col>
+              </>
+            )}
 
             <Form.Label column xs={6} md={3} lg="auto">
               SMD:
             </Form.Label>
-            <Col xs={6} md={3}>
+            <Col xs={6} md={3} lg="auto">
               <Form.Control value={colorInput} onChange={colorInputChange} />
             </Col>
 
             <Form.Label column xs={4} lg="auto">
-              Web:{' '}
+              Picker:{' '}
             </Form.Label>
             <Col xs={4}>
               <Form.Control
@@ -134,8 +125,8 @@ export function SMDColorSelector({
                 onChange={webColorChange}
               />
             </Col>
-            <Form.Label column xs={4} lg="auto">
-              {webColor}
+            <Form.Label className="text-center" column xs={4}>
+              Web: {webColor}
             </Form.Label>
           </Form.Group>
 

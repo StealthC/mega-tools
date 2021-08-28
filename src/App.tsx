@@ -27,12 +27,12 @@ function App(): JSX.Element {
         <Nav variant="tabs">
           <Nav.Item>
             <Nav.Link as={NavLink} to="/colors">
-              Color
+              Color Picker
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link as={NavLink} to="/gradient">
-              Gradient (Soon&trade;)
+              Gradient Generator
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
