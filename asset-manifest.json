@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/mega-tools/static/css/main.72c507b4.chunk.css",
-    "main.js": "/mega-tools/static/js/main.f55ff819.chunk.js",
-    "main.js.map": "/mega-tools/static/js/main.f55ff819.chunk.js.map",
+    "main.js": "/mega-tools/static/js/main.e018c2af.chunk.js",
+    "main.js.map": "/mega-tools/static/js/main.e018c2af.chunk.js.map",
     "runtime-main.js": "/mega-tools/static/js/runtime-main.f9cb0f04.js",
     "runtime-main.js.map": "/mega-tools/static/js/runtime-main.f9cb0f04.js.map",
     "static/js/2.31cbb5fb.chunk.js": "/mega-tools/static/js/2.31cbb5fb.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.f9cb0f04.js",
     "static/js/2.31cbb5fb.chunk.js",
     "static/css/main.72c507b4.chunk.css",
-    "static/js/main.f55ff819.chunk.js"
+    "static/js/main.e018c2af.chunk.js"
   ]
 }
