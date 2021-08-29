@@ -12,7 +12,16 @@ export function ControlOp() {
   const result = interpretLongValueToControl(opcode);
   let elements;
   if (result.length === 1) {
-    elements = <ControlAdressOp op={result[0]} />;
+    elements = [
+      <p>VDP Address Operation.</p>,
+      <ControlAdressOp op={result[0]} />,
+    ];
+  } else if (result.length === 2) {
+    elements = [
+      <p>Two VDP Register Operation.</p>,
+    ];
+  } else {
+    elements = <p>Invalid Number.</p>,
   }
   return (
     <div>
