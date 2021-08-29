@@ -10,7 +10,7 @@ import { generateGradient } from './utils/smdColors';
 import { SMDColorSelector } from './features/palette/SMDColorSelector';
 import { SMDPaletteColors } from './features/palette/SMDPaletteColors';
 
-export function GradientsPage(): JSX.Element {
+export function Gradient(): JSX.Element {
   const { gradientStart, gradientEnd, gradientSteps, gradientMode } =
     useAppSelector(getGradient);
   const gradientColors = generateGradient(
@@ -25,7 +25,8 @@ export function GradientsPage(): JSX.Element {
   return (
     <div>
       <Row>
-        <Col lg={6}>
+        <Col lg={6} className="pt-2">
+          <h4>Starting Color</h4>
           <SMDColorSelector
             initialColor={gradientStart}
             initialBrightnessMode={gradientMode}
@@ -33,7 +34,8 @@ export function GradientsPage(): JSX.Element {
             onChangeColor={(color) => dispatch(setGradientStart(color))}
           />
         </Col>
-        <Col lg={6}>
+        <Col lg={6} className="pt-2">
+          <h4>Ending Color</h4>
           <SMDColorSelector
             initialColor={gradientEnd}
             initialBrightnessMode={gradientMode}
@@ -43,13 +45,16 @@ export function GradientsPage(): JSX.Element {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs={12} md={6} className="pt-2">
           <SMDPaletteColors colors={gradientColors} mode={gradientMode} />
         </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Form.Control as="textarea" value={gradientText} />
+        <Col xs={12} md={6} className="pt-2">
+          <Form.Control
+            style={{ resize: 'none' }}
+            className="h-100"
+            as="textarea"
+            value={gradientText}
+          />
         </Col>
       </Row>
     </div>

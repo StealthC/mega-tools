@@ -1,21 +1,38 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from './app/hooks';
-import { getColor, setColor } from './features/palette/paletteSlice';
-import { SMDColorSelector } from './features/palette/SMDColorSelector';
+import { ColorSelector } from './ColorsSelector';
+import { Gradient } from './Gradient';
 
 export function ColorsPage(): JSX.Element {
-  const dispatch = useAppDispatch();
-  const { color, colorMode } = useAppSelector(getColor);
-  const onChangeColor = (ncolor: number) => {
-    dispatch(setColor(ncolor));
-  };
   return (
-    <div>
-      <SMDColorSelector
-        initialColor={color}
-        initialBrightnessMode={colorMode}
-        onChangeColor={onChangeColor}
-      />
-    </div>
+    <>
+      <h3>Simple Color Selector</h3>
+      <ColorSelector />
+      <h3 className="pt-4">Gradient Generator</h3>
+      <Gradient />
+      <p className="small pt-4">
+        Technical explanation can be found in:
+        <ul>
+          <li>
+            <a
+              href="https://segaretro.org/Sega_Mega_Drive/Palettes_and_CRAM"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Sega Mega Drive/Palettes and CRAM (Sega Retro)
+            </a>
+          </li>
+          <li>
+            <a
+              href="http://gendev.spritesmind.net/forum/viewtopic.php?t=2188"
+              target="_blank"
+              rel="noreferrer"
+            >
+              MD VDP color levels (spritesmind.net GenDev Forum, TmEE co.(TM)
+              Post)
+            </a>
+          </li>
+        </ul>
+      </p>
+    </>
   );
 }

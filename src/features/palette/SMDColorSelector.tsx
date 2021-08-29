@@ -58,6 +58,7 @@ export function SMDColorSelector({
       selectMode(mode),
     );
     setColor(n);
+    setColorInput(`0x${n.toString(16)}`);
     if (onChangeColor) {
       onChangeColor(n);
     }

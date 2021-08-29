@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Alert, Col, Form } from 'react-bootstrap';
 import { interpretControlOperation, OperationResult } from '../../utils/vdp';
-import { ControlAdressOp } from './ControlAddressOp';
+import { AnalysisPrint } from './AnalysisPrint';
+import { getAddressOpAnalysis } from './VDPAnalysis';
 
 export function ControlOp() {
   const [opcodeText, setOpcodeText] = useState('0x0');
@@ -17,36 +18,37 @@ export function ControlOp() {
     error = e.message;
   }
 
-  let codeType = error;
   let elements;
   if (!error) {
     if (result.isRegisterOp) {
-      if (result.operations.length === 1) {
-        codeType = 'One VDP Register Operation';
-      } else if (result.operations.length === 2) {
-        codeType = 'Two VDP Register Operation';
-      }
+      elements = result.operations.map((v) => v.toString());
     } else {
-      codeType = 'VDP Address Operation';
-      elements = <ControlAdressOp op={result.operations[0]} />;
+      elements = (
+        <AnalysisPrint data={getAddressOpAnalysis(result.operations[0])} />
+      );
     }
   }
   return (
-    <div>
-      <p className="text-center">
-        Type there the number writen to 0xC00004 (Control Port of VDP) to see
-        what it does. Start with &quot;0x&quot; for hexadecimal.
-      </p>
-      <Form.Group as={Row}>
-        <Form.Label className="text-end" column xs={3}>
-          Op Code
-        </Form.Label>
-        <Col>
-          <Form.Control value={opcodeText} onChange={onOpcodeChange} />
-        </Col>
-      </Form.Group>
-      <p className="text-center">{codeType}</p>
-      {elements}
-    </div>
+    <>
+      <div>
+        <Form.Group>
+          <Form.Label>
+            Type number sent to address <mark>0xc00004</mark> (Control Port of
+            VDP) to see what operation it does. Start with &quot;0x&quot; for
+            hexadecimal.
+          </Form.Label>
+
+          <Col>
+            <Form.Control
+              placeholder="0x0"
+              value={opcodeText}
+              onChange={onOpcodeChange}
+            />
+          </Col>
+        </Form.Group>
+        {error ? <Alert>{error}</Alert> : null}
+        {elements}
+      </div>
+    </>
   );
 }
