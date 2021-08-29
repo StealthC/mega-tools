@@ -59,6 +59,32 @@ export function getBackgroundColorValues(n: number): BackgroundColorValues {
   };
 }
 
+export enum DMASourceOp {
+  m68kToVRAM = 0,
+  VRAM_FILL = 1,
+  VRAM_TO_VRAM = 2,
+}
+export interface DMASource3Values {
+  highBytes: number;
+  DMAOp: DMASourceOp;
+}
+
+export function getDMASource3Values(n: number): DMASource3Values {
+  const opb = (0b11000000 & n) >> 6;
+  const r = {
+    highBytes: (0b111111 & n) >>> 0,
+    DMAOp: DMASourceOp.m68kToVRAM,
+  };
+  if (opb === 0b10) {
+    r.DMAOp = DMASourceOp.VRAM_FILL;
+  } else if (opb === 0b11) {
+    r.DMAOp = DMASourceOp.VRAM_TO_VRAM;
+  } else {
+    r.highBytes = (0b1111111 & n) >>> 0;
+  }
+  return r;
+}
+
 // Interpret Register Write
 
 export function getRegisterWordValues(n: number): RegisterWriteControlValues {
@@ -99,6 +125,9 @@ export function interpretControlOperation(n: number): OperationResult {
   const r: OperationResult = {
     operations: [],
   };
+  if (Number.isNaN(n)) {
+    throw new Error('Please type a number.');
+  }
   if (n > 0xffffffff) {
     throw new Error('The number cannot be larger than longword (4 bytes)');
   }

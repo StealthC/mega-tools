@@ -1,6 +1,7 @@
 import {
   getBackgroundColorValues,
   getControlAddressValues,
+  getDMASource3Values,
   getModeRegister1Values,
   getModeRegister2Values,
   getRegisterWordValues,
@@ -21,7 +22,7 @@ export const MemorySpaceStrings = [
 export function getAddressOpAnalysis(op: number): AnalysisData {
   const values = getControlAddressValues(op);
   return {
-    title: 'VDP Address Operation',
+    title: `0x${op.toString(16)} - VDP Address Operation`,
     data: [
       { key: 'Memory Space', value: MemorySpaceStrings[values.memorySpace] },
       { key: 'Operation type', value: values.write ? 'Write' : 'Read' },
@@ -52,11 +53,17 @@ export const registerStrings = [
   'Plane Size',
   'Window Plane Horizontal Position',
   'Window Plane Vertical Position',
-  'DMA Length 1',
-  'DMA Length 2',
-  'DMA Source 1',
-  'DMA Source 2',
-  'DMA Source 3',
+  'DMA Length',
+  'DMA Length',
+  'DMA Source',
+  'DMA Source',
+  'DMA Source',
+];
+
+export const DMAOpStrings = [
+  '64K to VRAM',
+  'VRAM Fill (source can be left blank)',
+  'VRAM to VRAM copy',
 ];
 
 export function getRegisterOpAnalysis(op: number): AnalysisData {
@@ -64,7 +71,7 @@ export function getRegisterOpAnalysis(op: number): AnalysisData {
   const registerString =
     register > 0x17 ? 'Invalid Register Number' : registerStrings[register];
   const r: AnalysisData = {
-    title: 'VDP Register Operation',
+    title: `0x${op.toString(16)} - VDP Register Operation`,
     data: [
       {
         key: 'Register',
@@ -139,6 +146,75 @@ export function getRegisterOpAnalysis(op: number): AnalysisData {
       {
         key: 'Background Palette Color',
         value: `0x${values.colorIndex}`,
+      },
+    ]);
+  } else if (register === 0xa) {
+    r.data = r.data.concat([
+      {
+        key: 'Number of scanlines between horizontal interrupts',
+        value: `0x${value.toString(16)}`,
+      },
+    ]);
+  } else if (register === 0xf) {
+    r.data = r.data.concat([
+      {
+        key: 'Increment value after each read/write to the data port',
+        value: `0x${value.toString(16)}`,
+      },
+    ]);
+  } else if (register === 0x13) {
+    const str = value.toString(16);
+    r.data = r.data.concat([
+      {
+        key: 'DMA Length (low bytes)',
+        value: `0x${str} (0x??${
+          '0'.repeat(Math.max(0, 2 - str.length)) + str
+        }) - final value is multiplied by 2 bytes.`,
+      },
+    ]);
+  } else if (register === 0x14) {
+    r.data = r.data.concat([
+      {
+        key: 'DMA Length (high bytes)',
+        value: `0x${value.toString(16)} (0x${value.toString(
+          16,
+        )}??) - final value is multiplied by 2 bytes.`,
+      },
+    ]);
+  } else if (register === 0x15) {
+    const str = value.toString(16);
+    r.data = r.data.concat([
+      {
+        key: 'DMA Source (low bytes)',
+        value: `0x${str} (0x????${
+          '0'.repeat(Math.max(0, 2 - str.length)) + str
+        }) - final value is multiplied by 2 bytes.`,
+      },
+    ]);
+  } else if (register === 0x16) {
+    const str = value.toString(16);
+    r.data = r.data.concat([
+      {
+        key: 'DMA Source (middle bytes)',
+        value: `0x${str} (0x??${
+          '0'.repeat(Math.max(0, 2 - str.length)) + str
+        }??) - final value is multiplied by 2 bytes.`,
+      },
+    ]);
+  } else if (register === 0x17) {
+    const values = getDMASource3Values(value);
+    r.data = r.data.concat([
+      {
+        key: 'DMA Source (high bytes)',
+        value: `0x${values.highBytes.toString(
+          16,
+        )} (0x${values.highBytes.toString(
+          16,
+        )}????) - final value is multiplied by 2 bytes.`,
+      },
+      {
+        key: 'DMA Operation',
+        value: `0x${DMAOpStrings[values.DMAOp]}`,
       },
     ]);
   }

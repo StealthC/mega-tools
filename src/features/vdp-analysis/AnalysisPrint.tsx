@@ -8,12 +8,12 @@ export interface AnalysisPrintData {
 export function AnalysisPrint({ data }: AnalysisPrintData): JSX.Element {
   return (
     <>
-      <h3>{data.title}</h3>
+      <h3 className="text-center">{data.title}</h3>
       <dl className="row">
         {data.data.map((v) => (
           <>
-            <dt className="col-3 text-end">{v.key}</dt>
-            <dd className="col-9">{v.value}</dd>
+            <dt className="col col-6 text-end">{v.key}</dt>
+            <dd className="col col-6">{v.value}</dd>
           </>
         ))}
       </dl>

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Alert, Col, Form } from 'react-bootstrap';
+import { Alert, Col, Form, Row } from 'react-bootstrap';
 import { interpretControlOperation, OperationResult } from '../../utils/vdp';
 import { AnalysisPrint } from './AnalysisPrint';
 import { getAddressOpAnalysis, getRegisterOpAnalysis } from './VDPAnalysis';
@@ -21,9 +21,15 @@ export function ControlOp() {
   let elements;
   if (!error) {
     if (result.isRegisterOp) {
-      elements = result.operations.map((v) => (
-        <AnalysisPrint data={getRegisterOpAnalysis(v)} />
-      ));
+      elements = (
+        <Row>
+          {result.operations.map((v) => (
+            <Col>
+              <AnalysisPrint data={getRegisterOpAnalysis(v)} />
+            </Col>
+          ))}
+        </Row>
+      );
     } else {
       elements = (
         <AnalysisPrint data={getAddressOpAnalysis(result.operations[0])} />
@@ -42,13 +48,14 @@ export function ControlOp() {
 
           <Col>
             <Form.Control
+              className="text-center"
               placeholder="0x0"
               value={opcodeText}
               onChange={onOpcodeChange}
             />
           </Col>
         </Form.Group>
-        {error ? <Alert>{error}</Alert> : null}
+        {error ? <Alert className="text-center">{error}</Alert> : null}
         {elements}
       </div>
     </>
