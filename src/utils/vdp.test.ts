@@ -32,9 +32,28 @@ it('Register Write Word', () => {
   ).toBe(0x8004);
 });
 
-it('interprets long values to control port', () => {
-  expect(vdp.interpretLongValueToControl(0x80048134)).toEqual([0x8004, 0x8134]);
-  expect(vdp.interpretLongValueToControl(0x40000010)).toEqual([0x40000010]);
+it('interprets values to control port (register word)', () => {
+  expect(vdp.interpretControlOperation(0x8004)).toEqual({
+    isRegisterOp: true,
+    operations: [0x8004],
+  });
+  expect(vdp.interpretControlOperation(0x8134)).toEqual({
+    isRegisterOp: true,
+    operations: [0x8134],
+  });
+});
+
+it('interprets values to control port (register long)', () => {
+  expect(vdp.interpretControlOperation(0x80048134)).toEqual({
+    isRegisterOp: true,
+    operations: [0x8004, 0x8134],
+  });
+});
+
+it('interprets values to control port (address)', () => {
+  expect(vdp.interpretControlOperation(0x40000010)).toEqual({
+    operations: [0x40000010],
+  });
 });
 
 it('interpret control addresses', () => {
@@ -59,4 +78,22 @@ it('interpret control addresses', () => {
     VRAM2VRAMcp: false,
     address: 0x0,
   });
+});
+
+it('results in a error when trying a big number', () => {
+  expect(() => {
+    vdp.interpretControlOperation(0x100000000);
+  }).toThrow();
+});
+
+it('results in a error when trying a invalid number', () => {
+  expect(() => {
+    vdp.interpretControlOperation(0xffff);
+  }).toThrow();
+});
+
+it('results in a error when trying a negative number', () => {
+  expect(() => {
+    vdp.interpretControlOperation(-1);
+  }).toThrow();
 });

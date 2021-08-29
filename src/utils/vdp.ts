@@ -56,20 +56,41 @@ export interface AddressControlValues {
   DMA: boolean;
 }
 
-export function interpretLongValueToControl(n: number): number[] {
-  if ((n & 0x80008000) !== 0 && (n & 0x60006000) === 0) {
-    // It is two register operations
-    const registerWords = [];
-    registerWords.push(n >>> 16);
-    registerWords.push(n & 0xffff);
-    return registerWords;
+export interface OperationResult {
+  isRegisterOp?: boolean;
+  operations: number[];
+}
+
+export function interpretControlOperation(n: number): OperationResult {
+  const r: OperationResult = {
+    operations: [],
+  };
+  if (n > 0xffffffff) {
+    throw new Error('The number cannot be larger than longword (4 bytes)');
+  }
+  if (n < 0) {
+    throw new Error('The number need to be positive');
+  }
+  if ((n & 0x8000) === 0x8000 && (n & 0x6000) === 0) {
+    r.isRegisterOp = true;
+    r.operations.push(n & 0xffff);
+    if (n > 0xffff) {
+      if ((n & 0x80000000) >>> 0 === 0x80000000 && (n & 0x60000000) === 0) {
+        // It is two register operations
+        r.operations.unshift((n & 0xffff0000) >>> 16);
+      } else {
+        throw new Error('Invalid Operation');
+      }
+    }
+    return r;
   }
   if ((n & 0xff0c) !== 0) {
     // There's a error
-    return [];
+    throw new Error('Invalid Operation');
   }
   // It is a address manipulation
-  return [n];
+  r.operations.push(n);
+  return r;
 }
 
 export function getControlAddressValues(n: number): AddressControlValues {

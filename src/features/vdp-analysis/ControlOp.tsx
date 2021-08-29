@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import { interpretLongValueToControl } from '../../utils/vdp';
+import { interpretControlOperation, OperationResult } from '../../utils/vdp';
 import { ControlAdressOp } from './ControlAddressOp';
 
 export function ControlOp() {
@@ -9,19 +9,27 @@ export function ControlOp() {
     setOpcodeText(ev.currentTarget.value);
   }
   const opcode = parseInt(opcodeText);
-  const result = interpretLongValueToControl(opcode);
+  let result: OperationResult = { operations: [] };
+  let error = '';
+  try {
+    result = interpretControlOperation(opcode);
+  } catch (e) {
+    error = e.message;
+  }
+
+  let codeType = error;
   let elements;
-  if (result.length === 1) {
-    elements = [
-      <p>VDP Address Operation.</p>,
-      <ControlAdressOp op={result[0]} />,
-    ];
-  } else if (result.length === 2) {
-    elements = [
-      <p>Two VDP Register Operation.</p>,
-    ];
-  } else {
-    elements = <p>Invalid Number.</p>,
+  if (!error) {
+    if (result.isRegisterOp) {
+      if (result.operations.length === 1) {
+        codeType = 'One VDP Register Operation';
+      } else if (result.operations.length === 2) {
+        codeType = 'Two VDP Register Operation';
+      }
+    } else {
+      codeType = 'VDP Address Operation';
+      elements = <ControlAdressOp op={result.operations[0]} />;
+    }
   }
   return (
     <div>
@@ -37,6 +45,7 @@ export function ControlOp() {
           <Form.Control value={opcodeText} onChange={onOpcodeChange} />
         </Col>
       </Form.Group>
+      <p className="text-center">{codeType}</p>
       {elements}
     </div>
   );
