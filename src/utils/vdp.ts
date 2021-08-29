@@ -70,10 +70,11 @@ export function createModeRegisterWord(v: RegisterWriteControlValues): number {
 }
 
 export enum MemorySpace {
-  VRAM,
-  CRAM,
-  VSRAM,
-  VRAM_BYTE,
+  UNKNOWN = 0,
+  VRAM = 1,
+  CRAM = 2,
+  VSRAM = 4,
+  VRAM_BYTE = 5,
 }
 
 export interface RegisterWriteControlValues {
@@ -127,9 +128,10 @@ export function interpretControlOperation(n: number): OperationResult {
 }
 
 export function getControlAddressValues(n: number): AddressControlValues {
-  const msn = (n >>> 15) | (((0x30 & n) >>> 4) << 1);
-  let memorySpace = MemorySpace.CRAM;
-  if (msn === 0b0) memorySpace = MemorySpace.VRAM;
+  const msn = ((n & 0x80000000) >>> 31) | ((0b110000 & n) >>> 3);
+  let memorySpace = MemorySpace.UNKNOWN;
+  if (msn === 0b100 || msn === 0b001) memorySpace = MemorySpace.CRAM;
+  if (msn === 0b000) memorySpace = MemorySpace.VRAM;
   if (msn === 0b010) memorySpace = MemorySpace.VSRAM;
   if (msn === 0b110) memorySpace = MemorySpace.VRAM_BYTE;
   return {

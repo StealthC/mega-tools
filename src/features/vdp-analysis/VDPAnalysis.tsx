@@ -10,7 +10,13 @@ export type AnalysisData = {
   title: string;
   data: { key: string | JSX.Element; value: string | JSX.Element }[];
 };
-export const MemorySpaceStrings = ['VRAM', 'CRAM', 'VSRAM', 'VRAM  (byte)'];
+export const MemorySpaceStrings = [
+  'UNKNOWN',
+  'VRAM',
+  'CRAM',
+  'VSRAM',
+  'VRAM  (byte)',
+];
 
 export function getAddressOpAnalysis(op: number): AnalysisData {
   const values = getControlAddressValues(op);
