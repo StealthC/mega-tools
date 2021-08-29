@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/mega-tools/static/css/main.72c507b4.chunk.css",
-    "main.js": "/mega-tools/static/js/main.35670fdb.chunk.js",
-    "main.js.map": "/mega-tools/static/js/main.35670fdb.chunk.js.map",
+    "main.js": "/mega-tools/static/js/main.86e08822.chunk.js",
+    "main.js.map": "/mega-tools/static/js/main.86e08822.chunk.js.map",
     "runtime-main.js": "/mega-tools/static/js/runtime-main.f9cb0f04.js",
     "runtime-main.js.map": "/mega-tools/static/js/runtime-main.f9cb0f04.js.map",
-    "static/js/2.d0a73f36.chunk.js": "/mega-tools/static/js/2.d0a73f36.chunk.js",
-    "static/js/2.d0a73f36.chunk.js.map": "/mega-tools/static/js/2.d0a73f36.chunk.js.map",
+    "static/js/2.3250908f.chunk.js": "/mega-tools/static/js/2.3250908f.chunk.js",
+    "static/js/2.3250908f.chunk.js.map": "/mega-tools/static/js/2.3250908f.chunk.js.map",
     "index.html": "/mega-tools/index.html",
     "static/css/main.72c507b4.chunk.css.map": "/mega-tools/static/css/main.72c507b4.chunk.css.map",
-    "static/js/2.d0a73f36.chunk.js.LICENSE.txt": "/mega-tools/static/js/2.d0a73f36.chunk.js.LICENSE.txt"
+    "static/js/2.3250908f.chunk.js.LICENSE.txt": "/mega-tools/static/js/2.3250908f.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f9cb0f04.js",
-    "static/js/2.d0a73f36.chunk.js",
+    "static/js/2.3250908f.chunk.js",
     "static/css/main.72c507b4.chunk.css",
-    "static/js/main.35670fdb.chunk.js"
+    "static/js/main.86e08822.chunk.js"
   ]
 }
