@@ -4,7 +4,7 @@ import {
   convert24BitsToWeb,
   convertSMDTo24Bit,
   selectMode,
-} from './smdColors';
+} from '../../utils/smdColors';
 
 export interface SMDPaletteColors {
   colors: number[];

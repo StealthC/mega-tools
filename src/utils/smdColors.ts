@@ -33,9 +33,9 @@ export function isValid(smdColor: number): boolean {
 }
 
 export function getBits(smdColor: number): ColorBits {
-  const r = (smdColor >> 1) & 7;
-  const g = (smdColor >> 5) & 7;
-  const b = (smdColor >> 9) & 7;
+  const r = (smdColor >>> 1) & 7;
+  const g = (smdColor >>> 5) & 7;
+  const b = (smdColor >>> 9) & 7;
   return { r, g, b };
 }
 
@@ -67,8 +67,8 @@ export function convert24BitToSMD(
   brightness = BrightnessModeIndex[0],
 ): number {
   const b = convertByteToIndex(B32Color & 0xff, brightness);
-  const g = convertByteToIndex((B32Color >> 8) & 0xff, brightness);
-  const r = convertByteToIndex((B32Color >> 16) & 0xff, brightness);
+  const g = convertByteToIndex((B32Color >>> 8) & 0xff, brightness);
+  const r = convertByteToIndex((B32Color >>> 16) & 0xff, brightness);
   return getColorFromBits({ r, g, b });
 }
 

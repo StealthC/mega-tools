@@ -6,7 +6,7 @@ import {
   setGradientEnd,
   setGradientStart,
 } from './features/palette/paletteSlice';
-import { generateGradient } from './features/palette/smdColors';
+import { generateGradient } from './utils/smdColors';
 import { SMDColorSelector } from './features/palette/SMDColorSelector';
 import { SMDPaletteColors } from './features/palette/SMDPaletteColors';
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { BrightnessMode } from './smdColors';
+import { BrightnessMode } from '../../utils/smdColors';
 
 export interface PaletteState {
   color: number;

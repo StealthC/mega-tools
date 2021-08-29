@@ -10,6 +10,7 @@ import {
 import { Container, Nav } from 'react-bootstrap';
 import { ColorsPage } from './ColorsPage';
 import { GradientsPage } from './GradientsPage';
+import { VDPControl } from './VDPControl';
 
 function App(): JSX.Element {
   return (
@@ -36,8 +37,8 @@ function App(): JSX.Element {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as={NavLink} to="/vdp">
-              VDP (Soon&trade;)
+            <Nav.Link as={NavLink} to="/vdpcontrol">
+              VDP Control
             </Nav.Link>
           </Nav.Item>
         </Nav>
@@ -48,6 +49,9 @@ function App(): JSX.Element {
             </Route>
             <Route path="/gradient">
               <GradientsPage />
+            </Route>
+            <Route path="/vdpcontrol">
+              <VDPControl />
             </Route>
             <Route path="/">
               <Redirect to="/colors" />

@@ -9,7 +9,7 @@ import {
   getColorFromBits,
   isValid,
   selectMode,
-} from './smdColors';
+} from '../../utils/smdColors';
 import styles from './SMDColorSelector.module.scss';
 
 export interface SMDColorSelectorProps {
