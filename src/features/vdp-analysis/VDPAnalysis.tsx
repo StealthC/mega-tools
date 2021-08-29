@@ -1,4 +1,5 @@
 import {
+  getBackgroundColorValues,
   getControlAddressValues,
   getModeRegister1Values,
   getModeRegister2Values,
@@ -7,7 +8,7 @@ import {
 
 export type AnalysisData = {
   title: string;
-  data: { key: string; value: string }[];
+  data: { key: string | JSX.Element; value: string | JSX.Element }[];
 };
 export const MemorySpaceStrings = ['VRAM', 'CRAM', 'VSRAM', 'VRAM  (byte)'];
 
@@ -49,13 +50,14 @@ export const registerStrings = [
   'DMA Length 2',
   'DMA Source 1',
   'DMA Source 2',
+  'DMA Source 3',
 ];
 
 export function getRegisterOpAnalysis(op: number): AnalysisData {
   const { register, value } = getRegisterWordValues(op);
   const registerString =
     register > 0x17 ? 'Invalid Register Number' : registerStrings[register];
-  const r = {
+  const r: AnalysisData = {
     title: 'VDP Register Operation',
     data: [
       {
@@ -119,6 +121,18 @@ export function getRegisterOpAnalysis(op: number): AnalysisData {
       {
         key: 'Mega Drive (mode 5)?',
         value: values.MDMode ? 'Yes' : 'No (Master System - mode 4)',
+      },
+    ]);
+  } else if (register === 0x7) {
+    const values = getBackgroundColorValues(value);
+    r.data = r.data.concat([
+      {
+        key: 'Background Palette Row',
+        value: `0x${values.paletteLine}`,
+      },
+      {
+        key: 'Background Palette Color',
+        value: `0x${values.colorIndex}`,
       },
     ]);
   }

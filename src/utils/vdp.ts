@@ -47,6 +47,18 @@ export function getModeRegister2Values(n: number): ModeRegister2Values {
   };
 }
 
+export interface BackgroundColorValues {
+  paletteLine: number;
+  colorIndex: number;
+}
+
+export function getBackgroundColorValues(n: number): BackgroundColorValues {
+  return {
+    paletteLine: (n & 0b110000) >>> 4,
+    colorIndex: (n & 0b1111) >>> 0,
+  };
+}
+
 // Interpret Register Write
 
 export function getRegisterWordValues(n: number): RegisterWriteControlValues {
