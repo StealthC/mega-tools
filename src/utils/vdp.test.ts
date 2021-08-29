@@ -1,4 +1,3 @@
-import { register } from '../serviceWorker';
 import * as vdp from './vdp';
 
 it('Mode Register 1', () => {
