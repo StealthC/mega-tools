@@ -10,7 +10,7 @@ export function ColorsPage(): JSX.Element {
       <h3 className="pt-4">Gradient Generator</h3>
       <Gradient />
       <p className="small pt-4">
-        Technical explanation can be found in:
+        Technical explanations can be found on:
         <ul>
           <li>
             <a

@@ -1,9 +1,8 @@
-// http://md.railgun.works/index.php?title=VDP
-
 // Mode Register 1
 export interface ModeRegister1Values {
   clearLeftmost8pixels: boolean;
-  generateHorizontalInterrupt: boolean;
+  enableHorizontalInterrupt: boolean;
+  useAllcolorBits: boolean;
   stopHVCounter: boolean;
   displayEnabled: boolean;
 }
@@ -11,9 +10,10 @@ export interface ModeRegister1Values {
 export function getModeRegister1Values(n: number): ModeRegister1Values {
   return {
     clearLeftmost8pixels: (n & 0x20) !== 0,
-    generateHorizontalInterrupt: (n & 0x10) !== 0,
+    enableHorizontalInterrupt: (n & 0x10) !== 0,
     stopHVCounter: (n & 2) !== 0,
     displayEnabled: (n & 1) !== 0,
+    useAllcolorBits: (n & 0b100) !== 0,
   };
 }
 
@@ -21,9 +21,30 @@ export function setModeRegister1Byte(v: ModeRegister1Values): number {
   let n = 4;
   if (v.displayEnabled) n |= 1;
   if (v.stopHVCounter) n |= 2;
-  if (v.generateHorizontalInterrupt) n |= 0x10;
+  if (v.enableHorizontalInterrupt) n |= 0x10;
   if (v.clearLeftmost8pixels) n |= 0x20;
+  if (v.useAllcolorBits) n |= 0b100;
   return n;
+}
+
+export interface ModeRegister2Values {
+  use128kbVRAM: boolean;
+  displayEnabled: boolean;
+  enableVerticalInterrupt: boolean;
+  enableDMA: boolean;
+  PALMode: boolean;
+  MDMode: boolean;
+}
+
+export function getModeRegister2Values(n: number): ModeRegister2Values {
+  return {
+    use128kbVRAM: (0b10000000 & n) !== 0,
+    displayEnabled: (0b1000000 & n) !== 0,
+    enableVerticalInterrupt: (0b100000 & n) !== 0,
+    enableDMA: (0b10000 & n) !== 0,
+    PALMode: (0b1000 & n) !== 0,
+    MDMode: (0b100 & n) !== 0,
+  };
 }
 
 // Interpret Register Write

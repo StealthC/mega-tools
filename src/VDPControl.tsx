@@ -6,7 +6,7 @@ export function VDPControl() {
     <>
       <ControlOp />
       <p className="small pt-4">
-        Technical explanation can be found in:
+        Technical explanations can be found on:
         <ul>
           <li>
             <a

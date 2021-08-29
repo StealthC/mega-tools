@@ -5,16 +5,18 @@ it('Mode Register 1', () => {
     vdp.setModeRegister1Byte({
       clearLeftmost8pixels: true,
       displayEnabled: true,
-      generateHorizontalInterrupt: true,
+      enableHorizontalInterrupt: true,
       stopHVCounter: true,
+      useAllcolorBits: true,
     }),
   ).toBe(0x37);
 
   expect(vdp.getModeRegister1Values(0x37)).toEqual({
     clearLeftmost8pixels: true,
     displayEnabled: true,
-    generateHorizontalInterrupt: true,
+    enableHorizontalInterrupt: true,
     stopHVCounter: true,
+    useAllcolorBits: true,
   });
 });
 
