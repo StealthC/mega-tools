@@ -1,0 +1,9 @@
+{
+  "name": "mega-tools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": {
+    "packages": ["packages/*"]
+  },
+  "private": true
+}

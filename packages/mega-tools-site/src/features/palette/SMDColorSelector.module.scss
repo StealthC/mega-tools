@@ -1,0 +1,53 @@
+.Sliders {
+    font-weight: bold;
+}
+
+.Value {
+    min-width: 4em;
+}
+
+.ColorInput {
+    width: 6em;
+}
+.R {
+    input[type=range]::-webkit-slider-thumb {
+        background: red;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        background: red;
+    }
+
+    input[type=range]::-ms-thumb {
+        background: red;
+    }
+    color: red
+}
+.G {
+    input[type=range]::-webkit-slider-thumb {
+        background: green;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        background: green;
+    }
+
+    input[type=range]::-ms-thumb {
+        background: green;
+    }
+    color: green
+}
+.B {
+    input[type=range]::-webkit-slider-thumb {
+        background: blue;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        background: blue;
+    }
+
+    input[type=range]::-ms-thumb {
+        background: blue;
+    }
+    color: blue
+}
