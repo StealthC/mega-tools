@@ -18,10 +18,12 @@ jobs:
         cache: 'yarn'
     
     - run: yarn install --frozen-lockfile
-    - run: cd packages/mega-tools-site
+    #- run: cd packages/mega-tools-site
     #- run: yarn test
-    - run: yarn build
+    - working-directory: ./packages/mega-tools-site
+      run: yarn build
     - name: Deploy
+      working-directory: ./packages/mega-tools-site
       run: |
         git config --global user.name $user_name
         git config --global user.email $user_email
